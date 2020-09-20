@@ -1,0 +1,66 @@
+/*
+ * U-Boot uImage source file with multiple kernels, ramdisks and FDT blobs
+ */
+
+/dts-v1/;
+
+/ {
+	description = "Various kernels, ramdisks and FDT blobs";
+	#address-cells = <1>;
+
+	images {
+		kernel@1 {
+			description = "linux-4.15";
+			data = /incbin/("./Image");
+			type = "kernel";
+			arch = "arm64";
+			os = "linux";
+			compression = "gzip";
+			load = <0x40080000>;
+			entry = <0x40080000>;
+			hash@1 {
+				algo = "md5";
+			};
+		};
+
+
+		ramdisk@1 {
+			description = "rootfs";
+			data = /incbin/("./rootfs.gz");
+			type = "ramdisk";
+			arch = "arm64";
+			os = "linux";
+			compression = "gzip";
+			load = <0x4a000000>;
+			entry = <0x4a000000>;
+			hash@1 {
+				algo = "md5";
+			};
+		};
+
+		fdt@1 {
+			description = "qserver-fdt";
+			data = /incbin/("./qserver.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			compression = "none";
+			load = <0x44000000>;
+			hash@1 {
+				algo = "crc32";
+			};
+		};
+
+	};
+
+	configurations {
+		default = "config@1";
+
+		config@1 {
+			description = "qserver configuration";
+			kernel = "kernel@1";
+			ramdisk = "ramdisk@1";
+			fdt = "fdt@1";
+		};
+
+	};
+};
