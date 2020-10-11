@@ -11,13 +11,13 @@
 	images {
 		kernel@1 {
 			description = "linux-4.15";
-			data = /incbin/("./Image");
+			data = /incbin/("./Image.gz");
 			type = "kernel";
 			arch = "arm64";
 			os = "linux";
 			compression = "gzip";
-			load = <0x40080000>;
-			entry = <0x40080000>;
+			load = <0x41000000>;
+			entry = <0x41000000>;
 			hash@1 {
 				algo = "md5";
 			};
@@ -26,7 +26,7 @@
 
 		ramdisk@1 {
 			description = "rootfs";
-			data = /incbin/("./rootfs.gz");
+			data = /incbin/("./ramdisk.img");
 			type = "ramdisk";
 			arch = "arm64";
 			os = "linux";
@@ -40,11 +40,45 @@
 
 		fdt@1 {
 			description = "qserver-fdt";
-			data = /incbin/("./qserver.dtb");
+			data = /incbin/("./obj/KERNEL/arch/arm64/boot/dts/qchip/qserver.dtb");
 			type = "flat_dt";
 			arch = "arm64";
-			compression = "none";
 			load = <0x44000000>;
+			compression = "none";
+			hash@1 {
+				algo = "crc32";
+			};
+		};
+
+		fdt@2 {
+			description = "qserver-adv7511-fdt";
+			data = /incbin/("./obj/KERNEL/arch/arm64/boot/dts/qchip/qserver-adv7511.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x44000000>;
+			compression = "none";
+			hash@1 {
+				algo = "crc32";
+			};
+		};
+		fdt@3 {
+			description = "qserver-panel-fdt";
+			data = /incbin/("obj//KERNEL/arch/arm64/boot/dts/qchip/qserver-generic-panel.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x44000000>;
+			compression = "none";
+			hash@1 {
+				algo = "crc32";
+			};
+		};
+		fdt@4 {
+			description = "qserver-ramdisk-fdt";
+			data = /incbin/("./obj/KERNEL/arch/arm64/boot/dts/qchip/qserver-ramdisk.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x44000000>;
+			compression = "none";
 			hash@1 {
 				algo = "crc32";
 			};
@@ -58,8 +92,25 @@
 		config@1 {
 			description = "qserver configuration";
 			kernel = "kernel@1";
-			ramdisk = "ramdisk@1";
 			fdt = "fdt@1";
+		};
+		config@2 {
+			description = "qserver adv7511 configuration";
+			kernel = "kernel@1";
+			ramdisk = "ramdisk@1";
+			fdt = "fdt@2";
+		};
+		config@3 {
+			description = "qserver panel configuration";
+			kernel = "kernel@1";
+			ramdisk = "ramdisk@1";
+			fdt = "fdt@3";
+		};
+		config@4 {
+			description = "qserver configuration";
+			kernel = "kernel@1";
+			ramdisk = "ramdisk@1";
+			fdt = "fdt@4";
 		};
 
 	};
